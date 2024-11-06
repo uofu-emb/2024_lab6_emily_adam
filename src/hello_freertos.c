@@ -19,7 +19,7 @@ bool on = false;
 SemaphoreHandle_t semaphore;
 
 #define FIRST_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
-#define SECOND_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
+#define SECOND_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2UL )
 
 // Activities 0 & 1
 /*
@@ -91,9 +91,10 @@ void main_task(__unused void *params) {
 }
 */
 
-void busy_busy(void)
+void busy_busy(int taskNumber)
 {
-    for (int i = 0; ; i++);
+    for (int i = 0; ; i++)
+        printf("%d\n",taskNumber);
 }
 
 void busy_yield(void)
@@ -105,12 +106,22 @@ void busy_yield(void)
 
 void first_task(__unused void *params)
 {
-
+    //vTaskDelay(1000);
+    printf("First task starting\n");
+    TickType_t start = xTaskGetTickCount();
+    busy_yield();
+    TickType_t stop = xTaskGetTickCount();
+    printf("first task time: %d\n", stop-start);
 }
 
 void second_task(__unused void *params)
 {
-    
+    //vTaskDelay(1000);
+    printf("Second task starting\n");
+    TickType_t start = xTaskGetTickCount();
+    busy_yield();
+    TickType_t stop = xTaskGetTickCount();
+    printf("second task time: %d\n", stop-start);
 }
 
 
